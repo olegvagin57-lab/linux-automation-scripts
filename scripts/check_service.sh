@@ -5,9 +5,14 @@ if [ "$#" -ne 2 ]; then
 	exit 1
 else
 	echo "Start cheching sevice $1 $2"
-	if  nc -zw 5 "$1" "$2" > /dev/null 2>&1; then
-		echo "Service "$1" "$2" is UP"
-	else
-		echo "Service "$1" "$2" is DOWN"
-	fi
+	COUNT=0
+	while [ $COUNT -ne 2 ]; do
+		if  nc -zw 5 "$1" "$2" > /dev/null 2>&1; then
+			echo "Service "$1" "$2" is UP"
+			exit 0
+		else
+			echo "Service "$1" "$2" is DOWN"
+			(( COUNT++ ))
+		fi
+	done
 fi
